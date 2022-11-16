@@ -20,6 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="48dp"
+    android:background="?attr/selectableItemBackground"
     android:descendantFocusability="blocksDescendants">
 
     <TextView
@@ -36,7 +37,7 @@
     <TextView
         android:id="@+id/item_price"
         style="@style/Widget.Inventory.ListItemTextView"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_below="@+id/item_name"
         android:layout_marginStart="@dimen/margin_between_elements"
         android:fontFamily="sans-serif-medium"
