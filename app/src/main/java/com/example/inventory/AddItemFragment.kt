@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -80,9 +81,39 @@ class AddItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val id = navigationArgs.itemId
+        if (id > 0){
+            viewModel.retrieveItem(id).observe(this.viewLifecycleOwner){ selectedItem ->
+                bind(selectedItem)
+            }
+        }else{
+            binding.saveAction.setOnClickListener {
+                addNewItem()
+            }
+        }
 
-        binding.saveAction.setOnClickListener {
-            addNewItem()
+    }
+
+    private fun updateItem(){
+        if (isEntryValid()){
+            viewModel.updateItem(
+                navigationArgs.itemId,
+                binding.itemName.text.toString(),
+                binding.itemPrice.text.toString(),
+                binding.itemCount.text.toString()
+            )
+            val action = AddItemFragmentDirections.actionAddItemFragmentToItemListFragment()
+            findNavController().navigate(action)
+        }
+    }
+
+    private fun bind(item: Item){
+        val price = "%.2f".format(item.itemPrice)
+        binding.apply {
+            itemName.setText(item.itemName, TextView.BufferType.SPANNABLE)
+            itemPrice.setText(price, TextView.BufferType.SPANNABLE)
+            itemCount.setText(item.quantityInStock.toString(), TextView.BufferType.SPANNABLE)
+            saveAction.setOnClickListener { updateItem() }
         }
     }
 
